@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Link } from 'react-router-dom';
+import { createPost } from '../actions';
+import { connect } from 'react-redux';
 
 class PostsNew extends Component {
-  
+
   renderField(field) {
     const { meta: { touched, error } } = field;
     const className = `form-group ${touched && error ? 'has-danger' : ''}`;
@@ -17,14 +19,14 @@ class PostsNew extends Component {
           {...field.input}
         />
         <div className="text-help">
-          { touched ? error : '' }
+          {touched ? error : ''}
         </div>
       </div>
     );
   }
 
   onSubmit(values) {
-    console.log(values);
+    this.props.createPost(values);
   }
 
   render() {
@@ -64,13 +66,13 @@ function validate(values) {
 
   // Here I should validate all the fields
   if (!values.title) {
-    errors.title = "Enter a Title"
+    errors.title = "Enter a Title";
   }
   if (!values.categories) {
-    errors.categories = "Enter a Categorie"
+    errors.categories = "Enter a Categorie";
   }
   if (!values.content) {
-    errors.content = "Enter a Content"
+    errors.content = "Enter a Content";
   }
 
   // If errors object is empty, reduxForm understand that there's no error.
@@ -81,4 +83,6 @@ function validate(values) {
 export default reduxForm({
   validate,
   form: 'PostsNewForm'
-})(PostsNew);
+})(
+  connect(null, { createPost })(PostsNew)
+);
